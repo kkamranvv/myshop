@@ -1,19 +1,23 @@
-<?php 
+<?php
+require_once 'includes/database.php';
 
-if ( isset($_GET["id"]) ) {
-  $id = $_GET["id"];
+if (isset($_GET["id"])) {
+    $id = $_GET["id"];
 
-  $servername = "localhost";
-  $username = "root";
-  $password = "";
-  $database = "myshop";
+    try {
+        // Delete order/orders
+        $stmtOrders = $pdo->prepare("DELETE FROM orders WHERE client_id = :id");
+        $stmtOrders->execute([':id' => $id]);
 
-  $connection = new mysqli($servername, $username, $password, $database);
+        // Delete client
+        $stmtClient = $pdo->prepare("DELETE FROM clients WHERE id = :id");
+        $stmtClient->execute([':id' => $id]);
 
-  $sql = "DELETE FROM clients WHERE id=$id";
-  $connection->query($sql);
+    } catch (PDOException $e) {
+        echo "Error: " . $e->getMessage();
+        exit;
+    }
 }
 
 header("location: /myshop/index.php");
 exit;
-?>

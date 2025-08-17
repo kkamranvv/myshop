@@ -1,11 +1,5 @@
 <?php 
-$servername = "localhost";
-$username = "root";
-$password = "";
-$database = "myshop";
-
-$connection = new mysqli($servername, $username, $password, $database);
-
+require_once "includes/database.php";
 
 $id = "";
 $name = "";
@@ -26,10 +20,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
     $id = $_GET["id"];
 
-    // read the row of the selected client from the table
-    $sql = "SELECT * FROM clients WHERE id=$id";
-    $result = $connection->query($sql);
-    $row = $result->fetch_assoc();
+    // read the row of the selected client from the table using PDO
+    $stmt = $pdo->prepare("SELECT * FROM clients WHERE id = :id");
+    $stmt->execute(['id' => $id]);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$row) {
         header("location: /myshop/index.php");
@@ -54,8 +48,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             break;
         }
 
-        $sql = "UPDATE clients SET name = '$name', email = '$email', phone = '$phone', address = '$address' WHERE id = $id";
-        $result = $connection->query($sql);
+        // prepared statement 
+        $stmt = $pdo->prepare("UPDATE clients SET name = :name, email = :email, phone = :phone, address = :address WHERE id = :id");
+        $result = $stmt->execute([
+            'name' => $name,
+            'email' => $email,
+            'phone' => $phone,
+            'address' => $address,
+            'id' => $id
+        ]);
 
         if (!$result) {
             $errorMessage = "Invalid query: " . $connection->error;
