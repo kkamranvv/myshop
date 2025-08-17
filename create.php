@@ -68,9 +68,3 @@
 </body>
 </html>
 
-function isPrime($number) {
-  if($number <= 1) {
-    return false
-  }
-  for($i = 2; $i <= sqrt($number))
-}
