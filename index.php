@@ -42,6 +42,15 @@ $stmt = $pdo->query($sql);
                 <td>
                   <a class="btn btn-primary btn-sm" href="/myshop/edit.php?id=<?= htmlspecialchars($row['id']) ?>">Edit</a>
                   <a class="btn btn-danger btn-sm" href="/myshop/delete.php?id=<?= htmlspecialchars($row['id']) ?>">Delete</a>
+                  <?php
+                    
+                    $orderCheck = $pdo->prepare("SELECT COUNT(*) FROM orders WHERE client_id = :client_id");
+                    $orderCheck->execute([':client_id' => $row['id']]);
+                    $orderCount = $orderCheck->fetchColumn();
+
+                    if ($orderCount > 0) : ?>
+                      <a class="btn btn-info btn-sm" href="/myshop/orders.php?id=<?= htmlspecialchars($row['id']) ?>">Orders</a>
+                  <?php endif; ?>
                 </td>
               </tr>
             <?php endwhile; ?>

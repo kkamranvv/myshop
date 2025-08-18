@@ -72,7 +72,4 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
   </div>
 </body>
 </html>
-<<<<<<< HEAD
 
-=======
->>>>>>> 85b3a62 (Refactor: switch database access to PDO)
